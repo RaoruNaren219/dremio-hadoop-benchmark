@@ -1,0 +1,14 @@
+dremio:
+  host: "localhost"
+  port: 9047
+  username: "your_username"
+  password: "your_password"
+  ssl: false
+  auth_type: "basic"  # or "token"
+  token: ""  # if using token authentication
+
+# Query settings
+query_settings:
+  timeout: 300  # seconds
+  max_rows: 1000000
+  fetch_size: 1000 

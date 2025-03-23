@@ -1,0 +1,19 @@
+hadoop:
+  namenode: "hdfs://localhost:9000"
+  username: "your_username"
+  keytab: "/path/to/keytab"
+  config_dir: "/etc/hadoop/conf"
+
+# Hive settings (if using Hive)
+hive:
+  host: "localhost"
+  port: 10000
+  database: "default"
+  username: "your_username"
+  password: "your_password"
+
+# Query settings
+query_settings:
+  timeout: 300  # seconds
+  max_rows: 1000000
+  fetch_size: 1000 
