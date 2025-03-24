@@ -14,7 +14,7 @@ def test_cluster_connection(client: DremioClient, cluster_name: str) -> bool:
         return True
     except Exception as e:
         logger.error(f"Failed to connect to {cluster_name}: {str(e)}")
-        return False
+        return Falsepa
 
 def test_data_transfer(source_client: DremioClient, target_client: DremioClient) -> None:
     """Test data transfer between clusters."""
