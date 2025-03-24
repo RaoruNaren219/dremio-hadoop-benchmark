@@ -46,18 +46,52 @@ class DremioClient:
         with open(config_path, 'r') as f:
             return yaml.safe_load(f)
 
-    def _setup_authentication(self):
-        """Setup authentication based on config."""
-        auth_type = self.cluster_config['auth_type']
-        if auth_type == 'basic':
-            self.session.auth = (
-                self.cluster_config['username'],
-                self.cluster_config['password']
-            )
-        elif auth_type == 'token':
+    def _setup_authentication(self) -> None:
+        """Set up authentication for Dremio."""
+        auth_type = self.cluster_config.get('auth_type', 'password')
+        
+        if auth_type == 'pat':
+            # Personal Access Token authentication
+            token = self.cluster_config.get('token')
+            if not token:
+                raise ValueError("PAT token is required for PAT authentication")
             self.session.headers.update({
-                'Authorization': f"Bearer {self.cluster_config['token']}"
+                'Authorization': f'Bearer {token}'
             })
+        elif auth_type == 'password':
+            # Password authentication
+            username = self.cluster_config.get('username')
+            password = self.cluster_config.get('password')
+            if not username or not password:
+                raise ValueError("Username and password are required for password authentication")
+            
+            # First, get the token using password authentication
+            auth_url = f"{self.base_url}/apiv2/login"
+            auth_data = {
+                "userName": username,
+                "password": password
+            }
+            
+            try:
+                response = self.session.post(auth_url, json=auth_data)
+                response.raise_for_status()
+                token = response.json().get('token')
+                if not token:
+                    raise ValueError("Failed to obtain authentication token")
+                
+                # Update session with the token
+                self.session.headers.update({
+                    'Authorization': f'Bearer {token}'
+                })
+            except requests.exceptions.RequestException as e:
+                raise Exception(f"Authentication failed: {str(e)}")
+        else:
+            raise ValueError(f"Unsupported authentication type: {auth_type}")
+        
+        # Add common headers
+        self.session.headers.update({
+            'Content-Type': 'application/json'
+        })
 
     def execute_query(self, query: str) -> Dict[str, Any]:
         """Execute a SQL query and return results."""
