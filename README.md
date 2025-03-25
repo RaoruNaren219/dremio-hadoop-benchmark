@@ -1,44 +1,22 @@
-# Dremio Hadoop Benchmark
+# DremioMetrics
 
-This project provides tools and scripts for benchmarking Dremio against Hadoop-based data processing systems.
+A comprehensive metrics collection and analysis suite for evaluating Dremio's performance across different workloads and data sizes. DremioMetrics provides a standardized way to measure, collect, and analyze Dremio's query performance, resource utilization, and scalability metrics.
 
-## Project Structure
+## Features
 
-```
-dremio-hadoop-benchmark/
-├── config/                 # Configuration files
-│   ├── dremio_config.yaml  # Dremio connection settings
-│   └── hadoop_config.yaml  # Hadoop cluster settings
-├── data/                   # Sample data and test datasets
-│   ├── raw/               # Raw data files
-│   └── processed/         # Processed data files
-├── src/                    # Source code
-│   ├── dremio/            # Dremio-specific code
-│   │   ├── client.py      # Dremio client implementation
-│   │   └── queries.py     # Dremio query definitions
-│   ├── hadoop/            # Hadoop-specific code
-│   │   ├── client.py      # Hadoop client implementation
-│   │   └── queries.py     # Hadoop query definitions
-│   └── common/            # Shared utilities
-│       ├── metrics.py     # Performance metrics collection
-│       └── utils.py       # Common utility functions
-├── tests/                 # Test files
-│   ├── test_dremio.py     # Dremio-specific tests
-│   └── test_hadoop.py     # Hadoop-specific tests
-├── results/               # Benchmark results
-│   ├── raw/              # Raw benchmark data
-│   └── reports/          # Generated reports
-├── notebooks/            # Jupyter notebooks for analysis
-├── requirements.txt      # Python dependencies
-└── README.md            # Project documentation
-```
+- TPC-DS data generation and preparation
+- Multiple workload types (BI Reporting, Analytical)
+- Resource usage monitoring
+- Parallel query execution
+- Detailed performance metrics collection
+- Results export in JSON and CSV formats
 
-## Setup
+## Installation
 
-1. Create a virtual environment:
+1. Clone the repository:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+git clone https://github.com/yourusername/dremiometrics.git
+cd dremiometrics
 ```
 
 2. Install dependencies:
@@ -46,35 +24,73 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Configure your environment:
-- Copy `config/dremio_config.yaml.example` to `config/dremio_config.yaml`
-- Copy `config/hadoop_config.yaml.example` to `config/hadoop_config.yaml`
-- Update the configuration files with your settings
+3. Install the package:
+```bash
+pip install -e .
+```
+
+## Configuration
+
+1. Copy the example configuration:
+```bash
+cp config/metrics_config.yaml.example config/metrics_config.yaml
+```
+
+2. Update the configuration file with your Dremio cluster details and metrics settings.
 
 ## Usage
 
-1. Run benchmarks:
+Run the metrics collection tool:
+
 ```bash
-python src/run_benchmarks.py
+# Run all workloads
+dremiometrics
+
+# Run specific workload
+dremiometrics --workload bi_reporting
+
+# Run with custom scale factor
+dremiometrics --scale-factor 10.0
+
+# Run with custom config and output directory
+dremiometrics --config custom_config.yaml --output-dir my_results
 ```
 
-2. Generate reports:
+## Metrics Results
+
+Results are saved in the specified output directory (default: `benchmark_results/`) in both JSON and CSV formats. The results include:
+
+- Query execution times
+- Resource utilization
+- Throughput metrics
+- Success/failure statistics
+
+## Development
+
+### Running Tests
+
 ```bash
-python src/generate_reports.py
+pytest tests/
 ```
 
-3. View results:
-- Check the `results/reports` directory for generated reports
-- Use Jupyter notebooks in the `notebooks` directory for detailed analysis
+### Project Structure
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+```
+dremiometrics/
+├── config/
+│   └── metrics_config.yaml
+├── src/
+│   └── dremio/
+│       ├── client.py
+│       ├── benchmark.py
+│       └── run_benchmarks.py
+├── tests/
+│   └── benchmark/
+│       └── test_benchmark.py
+├── requirements.txt
+└── setup.py
+```
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT License 
